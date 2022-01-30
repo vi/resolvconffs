@@ -1,11 +1,11 @@
 # resolvconffs
 
 Linux network namespaces allow separate networking environment for a group of processes (sharing uid or from a separate user).
-DNS settings (`/etc/resolv.conf`) is however shared between all those environments, which provides certain inconvenience.
+DNS settings (`/etc/resolv.conf`) are however shared between all those environments, which may be inconvenient in some setups.
 
-Typically (i.e. in `ip netns` tool) mount (filesystem) namespace is used along with netns as a workaround, mapping distinct `/etc/netns/...` files to main `/etc/resolv.conf`. This tool provides different approach based on a FUSE filesystem which provides this mapping without using additional mount namespaces.
+Typically (i.e. in `ip netns` tool) the mount (filesystem) namespace is used along with netns as a workaround, mapping distinct `/etc/netns/...` files to main `/etc/resolv.conf`. This tool provides different approach based on a FUSE filesystem which provides similar mapping without using additional mount namespace.
 
-It works by inspecing PIDs of each programs that access the mounted `/etc/resolv.conf`, using `/proc/<pid>/ns/net` to find out which underlying file should be used and forwarding reads and writes to that file instead. Missing files may be propagated from a user-specified template file.
+It works by inspecing PIDs of each programs that access the mounted `/etc/resolv.conf` and using `/proc/<pid>/ns/net` to find out which underlying file should be used and forwarding reads and writes to that file instead. Missing files may be propagated from a user-specified template file.
 
 # Example
 
@@ -50,4 +50,4 @@ Optional arguments:
 
 The project is not libified and library usage is not intended.
 
-There is simple reusable component named `FileMapperFs` inside, allowing implementing similar single-file filesystems based on `fuser` crate that maps the file based on `uid`, `gid` or `pid` of accessing process.
+There is a simple reusable component named `FileMapperFs` inside, allowing implementing similar single-file filesystems based on `fuser` crate that maps the file based on `uid`, `gid` or `pid` of accessing process.

@@ -345,9 +345,10 @@ fn main() -> std::io::Result<()> {
 
     mapper.sanity_check();
 
-    let mut fuse_opts = Vec::<MountOption>::with_capacity(2 + opts.other_fuse_opts.len());
+    let mut fuse_opts = Vec::<MountOption>::with_capacity(3 + opts.other_fuse_opts.len());
     fuse_opts.push(MountOption::FSName("resolvconffs".to_owned()));
     fuse_opts.push(MountOption::DefaultPermissions);
+    fuse_opts.push(MountOption::AllowOther);
     let fs = FileMapperFs::new(move |rq| mapper.map(rq));
 
     for x in opts.other_fuse_opts {

@@ -12,3 +12,19 @@ gumdrop = "0.8.0"
 libc = "0.2.116"
 nix = "0.23.1"
 trait-set = "0.2.0"
+log = { version = "0.4", features=[]}
+
+[profile.release]
+opt-level = "s"
+debug = 1
+rpath = false
+lto = true
+debug-assertions = false
+codegen-units = 1
+incremental = false
+panic = 'abort'
+
+[features]
+default=["logging"]
+mini = ["log/release_max_level_off"]
+logging = []

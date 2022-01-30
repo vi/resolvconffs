@@ -259,6 +259,7 @@ impl NetnsMapper {
             .ok()
             != Some(true)
         {
+            #[cfg(feature="logging")]
             eprintln!(
                 "Backing directory {:?} may be not accessible",
                 self.backing_directory
@@ -267,12 +268,14 @@ impl NetnsMapper {
 
         if let Some(ref deffile) = self.default_file {
             if std::fs::File::open(deffile).is_err() {
+                #[cfg(feature="logging")]
                 eprintln!("Default file {:?} may be unopeneable", deffile);
             }
         }
 
         let inits_netns = self.procfs.join("1/ns/net");
         if std::fs::read_link(&inits_netns).is_err() {
+            #[cfg(feature="logging")]
             eprintln!("Failed to resolve {:?}.\nYou may want to run resolvconffs as root if you want to serve multiple users.", inits_netns);
         }
     }
@@ -285,6 +288,7 @@ impl NetnsMapper {
         let netns = if let Ok(netns) = std::fs::read_link(&netnslink) {
             netns
         } else {
+            #[cfg(feature="logging")]
             eprintln!("Failed to readlink {:?}", netnslink);
             return None;
         };
@@ -292,6 +296,7 @@ impl NetnsMapper {
         let netns = if let Some(x) = netns.to_str() {
             x
         } else {
+            #[cfg(feature="logging")]
             eprintln!("Invalid netns symlink content in {:?}", netnslink);
             return None;
         };
@@ -300,11 +305,13 @@ impl NetnsMapper {
         let (net, ns) = if let Some(x) = netns.split_once(':') {
             x
         } else {
+            #[cfg(feature="logging")]
             eprintln!("netns symlink content has no `:` character in {:?}", netnslink);
             return None;
         };
 
         if net != "net" {
+            #[cfg(feature="logging")]
             eprintln!("netns symlink content does not start with 'net:' in {:?}", netnslink);
             return None;
         }
@@ -321,6 +328,7 @@ impl NetnsMapper {
         if let Some(ref deffile) = self.default_file {
             if std::fs::metadata(&targetfile).is_err() {
                 if std::fs::copy(deffile, &targetfile).is_err() {
+                    #[cfg(feature="logging")]
                     eprintln!("Cannot copy from {:?} to {:?}", deffile, targetfile);
                 }
             }
@@ -333,7 +341,9 @@ impl NetnsMapper {
 fn main() -> std::io::Result<()> {
     use fuser::MountOption;
 
+    #[cfg(feature="logging")]
     env_logger::init();
+
     let opts: Opts = gumdrop::parse_args_or_exit(gumdrop::ParsingStyle::AllOptions);
 
     let mapper = NetnsMapper {
@@ -360,6 +370,7 @@ fn main() -> std::io::Result<()> {
         .ok()
         != Some(true)
     {
+        #[cfg(feature="logging")]
         eprintln!("Use regular file as a mountpoint, not a directory.");
     }
 

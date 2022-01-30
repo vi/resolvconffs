@@ -162,6 +162,7 @@ dependencies = [
  "fuser",
  "gumdrop",
  "libc",
+ "log",
  "nix",
  "trait-set",
 ]

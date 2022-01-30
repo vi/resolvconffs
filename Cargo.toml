@@ -2,6 +2,12 @@
 name = "resolvconffs"
 version = "0.1.0"
 edition = "2021"
+categories = ["filesystem", "network-programming"]
+keywords = ["fuse","resolvconf","dns","network","filesystem"]
+license = "MIT/Apache-2.0"
+description = "Special single-file FUSE filesystem that maps the file depending on requestor's process's Linux network namespace"
+include = ["src","Cargo.toml","LICENSE","README.md"]
+repository = "https://github.com/vi/resolvconffs"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

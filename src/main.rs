@@ -79,7 +79,7 @@ fn getattr_impl(f: impl AsRef<Path>, ino: u64, reply: fuser::ReplyAttr) {
     let st = nftry!(nix::sys::stat::stat(f.as_ref()), reply);
 
     reply.attr(
-        &Duration::from_millis(1), // different programs see different file here, so better don't cache this entry at all. Zero does not work.
+        &Duration::from_millis(0),
         &fuser::FileAttr {
             ino,
             size: st.st_size as u64,
